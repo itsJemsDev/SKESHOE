@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#eaf5ee" />
+    <meta name="description" content="Explore a welcoming virtual campus, meet students, and find your community." />
+    <title>SKESHOE — Virtual Campus</title>
+  </head>
+  <body>
+    <div id="world"></div>
+    <div class="world-vignette" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="SKESHOE home">
+        <span class="brand-mark"><span></span><span></span><span></span></span>
+        <span class="brand-copy"><strong>SKESHOE</strong></span>
+      </a>
+      <div class="top-actions">
+        <button class="presence-pill" id="presence-pill" type="button" aria-label="1 student online" title="People online"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4V20" /><circle cx="10" cy="7" r="3.5" /><path d="M17 11.5a3.5 3.5 0 0 0 0-7M17 14.5a4 4 0 0 1 3 3.9V20" /></svg><b id="online-count">1</b><i class="live-dot"></i></button>
+        <button class="icon-button social-panel-toggle" id="chat-toggle" type="button" aria-label="Show campus chat" aria-controls="campus-chat" aria-expanded="false" title="Campus chat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H7l-3.5 2v-5A7.5 7.5 0 1 1 20 11.5Z" /></svg></button>
+        <button class="icon-button social-panel-toggle" id="neighbors-toggle" type="button" aria-label="Show students nearby" aria-controls="neighbors-panel" aria-expanded="false" title="Students nearby"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4V20" /><circle cx="10" cy="7" r="3.5" /><path d="M17 11.5a3.5 3.5 0 0 0 0-7M17 14.5a4 4 0 0 1 3 3.9V20" /></svg></button>
+        <button class="profile-button" id="profile-open"><span class="profile-avatar" id="profile-initial">G</span><span class="profile-name" id="profile-label">Guest</span><span class="chevron">⌄</span></button>
+      </div>
+    </header>
+    <div class="minimap-hud" id="minimap-hud">
+      <div class="mini-map overview-map" id="overview-mini-map">
+        <div class="map-canvas" id="overview-map-canvas">
+          <svg class="map-pathways" viewBox="-52 -52 104 104" preserveAspectRatio="none" aria-hidden="true">
+            <path class="map-pathway-kerb horizontal" d="M-48 0H48" />
+            <path class="map-pathway-kerb vertical" d="M0 -48V48" />
+            <path class="map-sidewalk" d="M-18.5 -5.8H-8.5 M-17 -11.1V-5.5 M8.5 -5.8H18.5 M17 -11.1V-5.5 M-20 6.2H-9 M-19 6.1V12.3 M9 6.2H20 M19 6.1V12.3 M-32.5 0H-14.5 M14.5 0H32.5 M0 -15.4V-1.4 M0 1.4V15.4" />
+            <path class="map-main-pathway" d="M-48 0H48 M0 -48V48" />
+          </svg>
+          <div id="overview-map-places"></div>
+          <span class="map-route" id="overview-map-route" aria-hidden="true"></span>
+          <span class="map-waypoint" id="overview-map-waypoint" aria-label="Your destination"></span>
+          <span class="map-player" id="overview-map-player" aria-label="Your position on the campus map"></span>
+        </div>
+      </div>
+      <button class="minimap-expand" id="minimap-expand" type="button" aria-label="Browse campus places" aria-expanded="false" title="Browse campus places">☰</button>
+      <div class="minimap-popover glass-panel" id="minimap-popover" hidden>
+        <div class="minimap-popover-head"><span><small>CAMPUS PLACES</small><strong>Where to next?</strong></span><button id="minimap-close" type="button" aria-label="Close places">×</button></div>
+        <div class="minimap-status"><i></i><span id="overview-map-message">Tap a landmark to walk there.</span></div>
+        <div class="place-list" id="place-list"></div>
+        <button class="event-card" id="event-card"><span class="event-sparkle">✦</span><span><small>UP NEXT · 2:30 PM</small><strong>Campus welcome mixer</strong><em>Meet students from around the world</em></span><span class="event-arrow">↗</span></button>
+      </div>
+    </div>
+
+    <aside class="right-rail glass-panel" id="neighbors-panel" hidden>
+      <div class="panel-heading people-heading"><div><span class="eyebrow">AROUND YOU</span><h2>Students nearby <span class="online-pill"><i></i><b id="neighbor-count">0</b></span></h2></div><button class="search-button" aria-label="Find a student">⌕</button></div>
+      <div class="neighbor-list" id="neighbor-list"></div>
+      <button class="invite-button" id="invite-button"><span>＋</span> Invite a friend</button>
+      <div class="neighbors-note"><span class="sparkle">✦</span> The best ideas start with a hello.</div>
+    </aside>
+
+    <section class="chat-panel glass-panel" id="campus-chat" aria-label="Campus chat" hidden>
+      <div class="chat-heading"><span class="chat-live"><i></i> CAMPUS CHAT</span><button class="chat-more" aria-label="Chat settings">···</button></div>
+      <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
+      <form class="chat-form" id="chat-form"><span class="chat-emoji">☺</span><input id="chat-input" maxlength="160" placeholder="Say something nice…" autocomplete="off" /><button type="submit" aria-label="Send message">↑</button></form>
+    </section>
+
+    <div class="action-dock glass-panel">
+      <button class="dock-action" data-action="wave" aria-label="Wave"><span>👋</span><small>Wave</small></button>
+      <button class="dock-action" data-action="emote" aria-label="Emotes"><span>😊</span><small>Emote</small></button>
+      <span class="dock-separator"></span>
+      <button class="dock-action" data-action="map" aria-label="Map"><span>⌖</span><small>Map</small></button>
+      <button class="dock-action" data-action="camera" aria-label="Change camera view"><span>◉</span><small>View</small></button>
+      <button class="dock-action" data-action="help" aria-label="Controls"><span>⌨</span><small>Controls</small></button>
+      <span class="dock-separator"></span>
+      <button class="voice-action" id="voice-button"><span class="voice-orb">♫</span><span><strong>Campus lounge</strong><small>Come together soon</small></span><span class="soon-tag">SOON</span></button>
+    </div>
+
+    <section class="map-panel glass-panel" id="map-panel" aria-label="Campus map">
+      <div class="map-heading"><span><small>TAKE A LOOK AROUND</small><strong>Campus map</strong></span><button id="map-close" aria-label="Close map">×</button></div>
+      <label class="map-search"><span>⌕</span><input id="map-search" type="search" placeholder="Find a campus place" autocomplete="off" /></label>
+      <div class="mini-map" id="mini-map">
+        <div class="map-canvas" id="map-canvas">
+          <svg class="map-pathways" viewBox="-52 -52 104 104" preserveAspectRatio="none" aria-hidden="true">
+            <path class="map-pathway-kerb horizontal" d="M-48 0H48" />
+            <path class="map-pathway-kerb vertical" d="M0 -48V48" />
+            <path class="map-sidewalk" d="M-18.5 -5.8H-8.5 M-17 -11.1V-5.5 M8.5 -5.8H18.5 M17 -11.1V-5.5 M-20 6.2H-9 M-19 6.1V12.3 M9 6.2H20 M19 6.1V12.3 M-32.5 0H-14.5 M14.5 0H32.5 M0 -15.4V-1.4 M0 1.4V15.4" />
+            <path class="map-main-pathway" d="M-48 0H48 M0 -48V48" />
+          </svg>
+          <div id="map-places"></div>
+          <span class="map-route" id="map-route" aria-hidden="true"></span>
+          <span class="map-waypoint" id="map-waypoint" aria-label="Your destination"></span>
+          <span class="map-player" id="map-player" aria-label="Your position on the campus map"></span>
+        </div>
+      </div>
+      <div class="map-foot"><i></i><span id="map-message">Choose a landmark and we’ll walk over together.</span></div>
+    </section>
+
+    <div class="interaction-hint" id="interaction-hint"><span>↵</span><strong>Press E</strong> <small>to join in</small></div>
+    <div class="toast" id="toast" role="status"></div>
+
+    <div class="pause-backdrop" id="pause-modal" aria-hidden="true">
+      <section class="pause-card glass-panel" aria-labelledby="pause-title">
+        <span class="eyebrow">TAKE A BREATHER</span>
+        <h2 id="pause-title">Campus is right here.</h2>
+        <p>Movement is paused. Your campus connection stays open while you take a moment.</p>
+        <button class="enter-button" id="resume-button" type="button">Back to campus <span>→</span></button>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="welcome-modal">
+      <section class="welcome-card">
+        <div class="welcome-art"><span class="welcome-sun"></span><span class="welcome-island"></span><span class="welcome-tree tree-one"></span><span class="welcome-tree tree-two"></span><span class="welcome-house"></span><span class="welcome-person person-one">●</span><span class="welcome-person person-two">●</span><span class="welcome-cloud">☁</span><span class="welcome-flower">✿</span></div>
+        <div class="welcome-content"><span class="welcome-kicker"><i></i> YOUR CAMPUS, WHEREVER YOU ARE</span><h1>Find your<br /><em>place here.</em></h1><p>Meet people, explore campus, and find a group to make things with.</p><form id="join-form"><label for="name-input">What should we call you?</label><div class="name-input-wrap"><span>☺</span><input id="name-input" maxlength="18" value="Sunny" autocomplete="nickname" /><span class="input-check">✦</span></div><button class="enter-button" type="submit">Enter campus <span>→</span></button></form><div class="welcome-foot"><span>✧</span> A campus open to everyone <span>✧</span></div></div>
+        <button class="modal-close" id="welcome-close" aria-label="Close welcome window">×</button>
+      </section>
+    </div>
+
+    <div class="profile-popover glass-panel" id="profile-popover"><span class="popover-label">YOUR PROFILE</span><div class="popover-person"><span class="profile-avatar large" id="popover-initial">S</span><span><strong id="popover-name">Sunny</strong><small>Campus neighbor</small></span></div><form class="profile-name-form" id="profile-name-form"><label for="profile-name-input">Display name</label><div class="profile-name-row"><input id="profile-name-input" maxlength="18" autocomplete="nickname" /><button type="submit">Save</button></div></form><div class="color-picker"><span>Pick your look</span><div id="avatar-colors"></div></div></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
